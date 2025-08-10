@@ -5,25 +5,27 @@ import {
   CreditCard,
   Globe,
   Zap,
+  HeartHandshake,
+  Lightbulb,
+  Users,
 } from "lucide-react";
 
-// Stats Data
-export const statsData = [
+// Core Values Data (replacing Stats Data)
+export const coreValuesData = [
   {
-    value: "50K+",
-    label: "Active Users",
+    icon: <HeartHandshake className="h-8 w-8 text-blue-600" />,
+    title: "Integrity",
+    description: "We believe in honesty, transparency, and doing the right thing for our users.",
   },
   {
-    value: "$2B+",
-    label: "Transactions Tracked",
+    icon: <Lightbulb className="h-8 w-8 text-blue-600" />,
+    title: "Innovation",
+    description: "We constantly explore new ideas and technologies to improve your experience.",
   },
   {
-    value: "99.9%",
-    label: "Uptime",
-  },
-  {
-    value: "4.9/5",
-    label: "User Rating",
+    icon: <Users className="h-8 w-8 text-blue-600" />,
+    title: "User-Centric",
+    description: "Every decision we make puts the user’s needs and satisfaction first.",
   },
 ];
 
@@ -85,27 +87,13 @@ export const howItWorksData = [
   },
 ];
 
-// Testimonials Data
-export const testimonialsData = [
+// About Us Data (replacing Testimonials Data)
+export const aboutUsData = [
   {
-    name: "Sarah Johnson",
-    role: "Small Business Owner",
-    image: "https://randomuser.me/api/portraits/women/75.jpg",
-    quote:
-      "Welth has transformed how I manage my business finances. The AI insights have helped me identify cost-saving opportunities I never knew existed.",
-  },
-  {
-    name: "Michael Chen",
-    role: "Freelancer",
-    image: "https://randomuser.me/api/portraits/men/75.jpg",
-    quote:
-      "The receipt scanning feature saves me hours each month. Now I can focus on my work instead of manual data entry and expense tracking.",
-  },
-  {
-    name: "Emily Rodriguez",
-    role: "Financial Advisor",
-    image: "https://randomuser.me/api/portraits/women/74.jpg",
-    quote:
-      "I recommend Welth to all my clients. The multi-currency support and detailed analytics make it perfect for international investors.",
+    name: "Vedant Nehulkar",
+    role: "Developer & Innovator",
+    email: "vedantnehulkar2005@gmail.com",
+    description:
+      "I’m Vedant, a passionate full-stack developer who loves building impactful, user-focused solutions. I specialize in creating efficient, modern web applications with real-time capabilities, seamless UI, and secure backend systems.",
   },
 ];
