@@ -4,7 +4,7 @@ import TransactionTable from './_components/transaction-table';
 import React from 'react'
 import { BarLoader } from 'react-spinners'
 import { Suspense } from 'react';           
-import AccountChart from './_components/account-chart';
+import AccountChart from './_components/Account-chart';
 
 async function AccountPage({params}) {
     try {
