@@ -3,7 +3,6 @@
 import { render } from "@react-email/render";
 
 export async function sendEmail({ to, subject, react }) {
-  // 👇 IMPORTANT: dynamic import
   const nodemailer = await import("nodemailer");
 
   const user = process.env.EMAIL_USER;
@@ -21,7 +20,8 @@ export async function sendEmail({ to, subject, react }) {
     },
   });
 
-  const html = render(react);
+  // 🔑 FIX IS HERE
+  const html = await render(react);
 
   await transporter.sendMail({
     from: `"Wealth App" <${user}>`,
