@@ -1,4 +1,5 @@
 "use client";
+import DatePickerField from "./date-picker-field";
 
 import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -278,84 +279,27 @@ export function AddTransactionForm({
       </div>
 
       {/* Date */}
-      <div className="space-y-2 relative">
-        <label className="text-sm font-medium">Date</label>
-        <Controller
-          control={control}
-          name="date"
-          rules={{ required: "Date is required" }}
-          render={({ field }) => {
-            const raw = field.value; // ISO string or undefined
-            const dateObj = raw ? new Date(raw) : null;
-            const isValidDate = dateObj && !isNaN(dateObj.getTime());
-            const [open, setOpen] = useState(false);
-            const containerRef = useRef(null);
+<div className="space-y-2 relative">
+  <label className="text-sm font-medium">Date</label>
 
-            // Prevent hydration mismatch by only showing formatted date on client
-            if (!isClient) {
-              return (
-                <div className="w-full flex items-center justify-between border rounded-md px-3 py-2 text-left font-normal text-muted-foreground">
-                  <span>Loading...</span>
-                  <CalendarIcon className="ml-2 h-4 w-4 opacity-70" />
-                </div>
-              );
-            }
+  <Controller
+    control={control}
+    name="date"
+    rules={{ required: "Date is required" }}
+    render={({ field }) => (
+      <DatePickerField
+        value={field.value}
+        onChange={field.onChange}
+        isClient={isClient}
+      />
+    )}
+  />
 
-            useEffect(() => {
-              const onOutside = (e) => {
-                if (
-                  containerRef.current &&
-                  !containerRef.current.contains(e.target)
-                ) {
-                  setOpen(false);
-                }
-              };
-              document.addEventListener("mousedown", onOutside);
-              return () =>
-                document.removeEventListener("mousedown", onOutside);
-            }, []);
+  {errors.date && (
+    <p className="text-sm text-red-500">{errors.date.message}</p>
+  )}
+</div>
 
-            return (
-              <div ref={containerRef} className="relative">
-                <button
-                  type="button"
-                  onClick={() => setOpen((o) => !o)}
-                  className={cn(
-                    "w-full flex items-center justify-between border rounded-md px-3 py-2 text-left font-normal",
-                    !isValidDate && "text-muted-foreground"
-                  )}
-                >
-                  <div>
-                    {isValidDate ? format(dateObj, "PPP") : <span>Pick a date</span>}
-                  </div>
-                  <CalendarIcon className="ml-2 h-4 w-4 opacity-70" />
-                </button>
-
-                {open && (
-                  <div className="absolute z-50 mt-2 bg-white border rounded-md shadow-lg p-2">
-                    <DayPicker
-                      mode="single"
-                      selected={isValidDate ? dateObj : undefined}
-                      onSelect={(selected) => {
-                        if (selected) {
-                          field.onChange(selected.toISOString());
-                        }
-                        setOpen(false);
-                      }}
-                      disabled={(d) =>
-                        d > new Date() || d < new Date("1900-01-01")
-                      }
-                    />
-                  </div>
-                )}
-              </div>
-            );
-          }}
-        />
-        {errors.date && (
-          <p className="text-sm text-red-500">{errors.date.message}</p>
-        )}
-      </div>
 
       {/* Description */}
       <div className="space-y-2">
