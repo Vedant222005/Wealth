@@ -1,26 +1,38 @@
 "use server";
 
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
+import { render } from "@react-email/render";
 
 export async function sendEmail({ to, subject, react }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  
-  if (!apiKey) {
-    return { success: false, error: { message: "RESEND_API_KEY is not configured" } };
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+
+  if (!user || !pass) {
+    throw new Error("GMAIL_USER or GMAIL_APP_PASSWORD is not configured");
   }
 
-  const resend = new Resend(apiKey);
-
   try {
-    const data = await resend.emails.send({
-      from: "Finance App <onboarding@resend.dev>",
-      to,
-      subject,
-      react,
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user,
+        pass,
+      },
     });
 
-    return { success: true, data };
+    // Convert React email template → HTML
+    const html = render(react);
+
+    await transporter.sendMail({
+      from: `"Finance App" <${user}>`,
+      to,
+      subject,
+      html,
+    });
+
+    return { success: true };
   } catch (error) {
-    return { success: false, error };
+    console.error("Email send failed:", error);
+    throw error; // IMPORTANT: let Inngest see failures
   }
 }
