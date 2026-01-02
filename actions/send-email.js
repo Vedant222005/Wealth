@@ -1,38 +1,34 @@
 "use server";
 
-import nodemailer from "nodemailer";
 import { render } from "@react-email/render";
 
 export async function sendEmail({ to, subject, react }) {
-  const user = process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_APP_PASSWORD;
+  // 👇 IMPORTANT: dynamic import
+  const nodemailer = await import("nodemailer");
+
+  const user = process.env.EMAIL_USER;
+  const pass = process.env.EMAIL_PASS;
 
   if (!user || !pass) {
-    throw new Error("GMAIL_USER or GMAIL_APP_PASSWORD is not configured");
+    throw new Error("EMAIL_USER or EMAIL_PASS is not configured");
   }
 
-  try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user,
-        pass,
-      },
-    });
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user,
+      pass,
+    },
+  });
 
-    // Convert React email template → HTML
-    const html = render(react);
+  const html = render(react);
 
-    await transporter.sendMail({
-      from: `"Finance App" <${user}>`,
-      to,
-      subject,
-      html,
-    });
+  await transporter.sendMail({
+    from: `"Wealth App" <${user}>`,
+    to,
+    subject,
+    html,
+  });
 
-    return { success: true };
-  } catch (error) {
-    console.error("Email send failed:", error);
-    throw error; // IMPORTANT: let Inngest see failures
-  }
+  return { success: true };
 }
