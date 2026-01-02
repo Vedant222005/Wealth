@@ -1,3 +1,5 @@
+export const runtime = "nodejs"; // 👈 REQUIRED for nodemailer
+
 import { serve } from "inngest/next";
 
 import { inngest } from "@/lib/inngest/client";
