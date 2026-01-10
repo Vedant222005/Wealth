@@ -3,9 +3,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const serializeAmount = (obj) => ({
   ...obj,
@@ -199,76 +196,6 @@ export async function getUserTransactions(query = {}) {
   }
 }
 
-// Scan Receipt
-export async function scanReceipt(formData) {
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-    // Get file from FormData
-    const file = formData.get('file');
-    if (!file) {
-      throw new Error("No file provided");
-    }
-
-    // Convert File to ArrayBuffer
-    const arrayBuffer = await file.arrayBuffer();
-    // Convert ArrayBuffer to Base64
-    const base64String = Buffer.from(arrayBuffer).toString("base64");
-
-    const prompt = `
-      Analyze this receipt image and extract the following information in JSON format:
-      - Total amount (just the number)
-      - Date (in YYYY-MM-DD format, if no date found use today's date)
-      - Description or items purchased (brief summary)
-      - Merchant/store name
-      - Suggested category (one of: housing,transportation,groceries,utilities,entertainment,food,shopping,healthcare,education,personal,travel,insurance,gifts,bills,other-expense )
-      
-      Only respond with valid JSON in this exact format:
-      {
-        "amount": number,
-        "date": "YYYY-MM-DD",
-        "description": "string",
-        "merchantName": "string",
-        "category": "string"
-      }
-
-      If its not a receipt, return an empty object
-    `;
-
-    const result = await model.generateContent([
-      {
-        inlineData: {
-          data: base64String,
-          mimeType: file.type,
-        },
-      },
-      prompt,
-    ]);
-
-    const response = await result.response;
-    const text = response.text();
-    const cleanedText = text.replace(/```(?:json)?\n?/g, "").trim();
-
-    try {
-      const data = JSON.parse(cleanedText);
-      
-      // Ensure all values are plain objects/primitives
-      const result = {
-        amount: parseFloat(data.amount) || 0,
-        date: data.date ? convertToISODateTime(data.date) : new Date().toISOString(),
-        description: data.description ? String(data.description) : "",
-        category: data.category ? String(data.category) : "",
-        merchantName: data.merchantName ? String(data.merchantName) : "",
-      };
-      
-      return result;
-    } catch (parseError) {
-      throw new Error("Invalid response format from Gemini");
-    }
-  } catch (error) {
-    throw new Error("Failed to scan receipt");
-  }
-}
 
 // Helper function to convert date to ISO DateTime format
 function convertToISODateTime(dateString) {

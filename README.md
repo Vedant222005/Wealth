@@ -6,6 +6,10 @@ A modern personal finance management application built with Next.js, featuring t
 
 - **Transaction Management**: Add, edit, and categorize income and expenses
 - **Receipt Scanning**: AI-powered receipt scanning using Google Gemini
+   ### Receipt Scanner (Demo Mode)
+   AI receipt scanning is mocked for demos and interviews to avoid API costs.
+   The architecture supports real AI providers (Gemini/OpenAI) via API swap.
+
 - **Budget Tracking**: Set monthly budgets and track spending
 - **Automated Alerts**: Email notifications when budget usage exceeds 80%
 - **Account Management**: Multiple account support with default account selection
