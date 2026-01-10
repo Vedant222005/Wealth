@@ -196,8 +196,7 @@ export async function getUserTransactions(query = {}) {
   }
 }
 
-<<<<<<< HEAD
-=======
+
 // Scan Receipt
 export async function scanReceipt(formData) {
   try {
@@ -268,7 +267,7 @@ export async function scanReceipt(formData) {
     throw new Error("Failed to scan receipt");
   }
 }
->>>>>>> 5cccfe1fdbcf9fd7f852eb049626150c06463cae
+
 
 // Helper function to convert date to ISO DateTime format
 function convertToISODateTime(dateString) {
